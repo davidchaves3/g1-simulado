@@ -88,16 +88,37 @@ export function Cart() {
 
   
   function handleItemIncrement(itemId: string) {
-    // coloque seu código aqui
+    setCoffeesInCart(prev =>
+      prev.map(coffee =>
+        coffee.id === itemId && coffee.quantity < 5
+          ? {
+              ...coffee,
+              quantity: coffee.quantity + 1,
+              subTotal: (coffee.quantity + 1) * coffee.price,
+            }
+          : coffee
+      )
+    )
   }
-
+  
   function handleItemDecrement(itemId: string) {
-    // coloque seu código aqui
+    setCoffeesInCart(prev =>
+      prev.map(coffee =>
+        coffee.id === itemId && coffee.quantity > 1
+          ? {
+              ...coffee,
+              quantity: coffee.quantity - 1,
+              subTotal: (coffee.quantity - 1) * coffee.price,
+            }
+          : coffee
+      )
+    )
   }
-
+  
   function handleItemRemove(itemId: string) {
-    // coloque seu código aqui
+    setCoffeesInCart(prev => prev.filter(coffee => coffee.id !== itemId))
   }
+  
   
   return (
     <Container>

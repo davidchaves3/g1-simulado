@@ -1,7 +1,5 @@
 /* eslint-disable no-unused-vars */
-
 import { NavigateFunction } from 'react-router-dom'
-import { OrderInfo } from '../../pages/Cart'
 import { Item } from './reducer'
 
 export enum ActionTypes {
@@ -10,6 +8,19 @@ export enum ActionTypes {
   INCREMENT_ITEM_QUANTITY = 'INCREMENT_ITEM_QUANTITY',
   DECREMENT_ITEM_QUANTITY = 'DECREMENT_ITEM_QUANTITY',
   CHECKOUT_CART = 'CHECKOUT_CART',
+}
+
+export interface OrderInfo {
+  address: {
+    cep: string
+    street: string
+    number: string
+    complement?: string
+    neighborhood: string
+    city: string
+    state: string
+  }
+  paymentMethod: 'credit' | 'debit' | 'money'
 }
 
 export type Actions =
@@ -36,51 +47,40 @@ export type Actions =
       }
     }
 
-export function addItemAction(item: Item) {
+export function addItemAction(item: Item): Actions {
   return {
     type: ActionTypes.ADD_ITEM,
-    payload: {
-      item,
-    },
-  } satisfies Actions
+    payload: { item },
+  }
 }
 
-export function removeItemAction(itemId: Item['id']) {
+export function removeItemAction(itemId: Item['id']): Actions {
   return {
     type: ActionTypes.REMOVE_ITEM,
-    payload: {
-      itemId,
-    },
-  } satisfies Actions
+    payload: { itemId },
+  }
 }
 
-export function incrementItemQuantityAction(itemId: Item['id']) {
+export function incrementItemQuantityAction(itemId: Item['id']): Actions {
   return {
     type: ActionTypes.INCREMENT_ITEM_QUANTITY,
-    payload: {
-      itemId,
-    },
-  } satisfies Actions
+    payload: { itemId },
+  }
 }
 
-export function decrementItemQuantityAction(itemId: Item['id']) {
+export function decrementItemQuantityAction(itemId: Item['id']): Actions {
   return {
     type: ActionTypes.DECREMENT_ITEM_QUANTITY,
-    payload: {
-      itemId,
-    },
-  } satisfies Actions
+    payload: { itemId },
+  }
 }
 
 export function checkoutCartAction(
   order: OrderInfo,
-  callback: NavigateFunction,
-) {
+  callback: NavigateFunction
+): Actions {
   return {
     type: ActionTypes.CHECKOUT_CART,
-    payload: {
-      order,
-      callback,
-    },
-  } satisfies Actions
+    payload: { order, callback },
+  }
 }

@@ -1,9 +1,13 @@
 import { produce } from 'immer'
-import { ActionTypes, Actions } from './actions'
-import { OrderInfo } from '../../pages/Cart'
+import { ActionTypes, Actions, OrderInfo } from './actions'
 
 export interface Item {
   id: string
+  title: string
+  description: string
+  tags: string[]
+  price: number
+  image: string
   quantity: number
 }
 
@@ -17,7 +21,8 @@ interface CartState {
   orders: Order[]
 }
 
-export function cartReducer(state: CartState, action: Actions) {
+
+export function cartReducer(state: CartState, action: Actions): CartState {
   switch (action.type) {
     case ActionTypes.ADD_ITEM:
       return produce(state, (draft) => {
@@ -34,10 +39,13 @@ export function cartReducer(state: CartState, action: Actions) {
 
     case ActionTypes.REMOVE_ITEM:
       return produce(state, (draft) => {
-        const itemToRemoveId = draft.cart.findIndex(
+        const itemToRemoveIndex = draft.cart.findIndex(
           (item) => item.id === action.payload.itemId,
         )
-        draft.cart.splice(itemToRemoveId, 1)
+
+        if (itemToRemoveIndex >= 0) {
+          draft.cart.splice(itemToRemoveIndex, 1)
+        }
       })
 
     case ActionTypes.INCREMENT_ITEM_QUANTITY:
@@ -46,7 +54,7 @@ export function cartReducer(state: CartState, action: Actions) {
           (item) => item.id === action.payload.itemId,
         )
 
-        if (itemToIncrement?.id) {
+        if (itemToIncrement) {
           itemToIncrement.quantity += 1
         }
       })
@@ -57,7 +65,7 @@ export function cartReducer(state: CartState, action: Actions) {
           (item) => item.id === action.payload.itemId,
         )
 
-        if (itemToDecrement?.id && itemToDecrement.quantity > 1) {
+        if (itemToDecrement && itemToDecrement.quantity > 1) {
           itemToDecrement.quantity -= 1
         }
       })
@@ -69,6 +77,7 @@ export function cartReducer(state: CartState, action: Actions) {
           items: state.cart,
           ...action.payload.order,
         }
+
         draft.orders.push(newOrder)
         draft.cart = []
 
